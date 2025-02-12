@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/NavBar";
+
+// Importa tu componente de React
+import PurchasedCourses from "../components/PurchasedCourses.jsx";
+---
+
+<Layout title="Mis Cursos">
+  <Navbar client:load />
+  
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Mis Cursos</h1>
+    
+
+
+    
+
+
+
+    <!-- Aquí renderizamos el componente de cursos comprados -->
+    <PurchasedCourses client:load />
+  </div>
+</Layout>

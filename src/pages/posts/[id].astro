@@ -1,0 +1,151 @@
+---
+import { getDatabase, ref, child, get } from "firebase/database";
+import { database } from "../../firebase";
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/NavBar";
+import VideoModal from "../../components/VideoModal"; 
+
+// Definición de interfaces en TypeScript para mejor estructura
+interface Course {
+  id: string;
+  titulo: string;
+  nivel: string;
+  horas: number;
+  precio: number;
+  instructor: string;
+  temas: string[];
+  imagen: string;
+  descripcion?: string;
+  category?: string;
+  likes?: number;
+  listaVid?: string; // URL del video o playlist
+}
+
+// Generación de rutas estáticas
+export async function getStaticPaths() {
+  const dbRef = ref(database);
+  const snapshot = await get(child(dbRef, "categorias_educativas"));
+  const categories = snapshot.val() || {};
+
+  const paths = Object.values(categories).flatMap((category: any) =>
+    category.cursos.map((course: any) => ({
+      params: { id: course.id.toString() },
+      props: {
+        course: {
+          ...course,
+          id: course.id.toString(),
+          category: category.nombre,
+        },
+      },
+    }))
+  );
+
+  return paths;
+}
+
+// Obtención de datos
+const { id } = Astro.params;
+const { course } = Astro.props;
+
+// Función de respaldo para SSR
+async function fetchCourse(): Promise<Course | null> {
+  const snapshot = await get(
+    child(ref(database), `categorias_educativas/${course?.category}/cursos/${id}`)
+  );
+  return snapshot.exists() ? { id, ...snapshot.val() } : null;
+}
+
+const courseData = course || (await fetchCourse());
+const loggedIn = typeof window !== "undefined" && localStorage.getItem("loggedInUser");
+---
+
+<Layout title={courseData?.titulo || "Detalle del curso"}>
+
+  <!-- Redirigir si NO existe 'loggedInUser' -->
+  <script is:inline>
+    if (typeof window !== 'undefined') {
+      if (!localStorage.getItem('loggedInUser')) {
+        window.location.href = '/login';
+      }
+    }
+  </script>
+
+  <Navbar client:load />
+
+  {courseData ? (
+    <div class="max-w-6xl mx-auto px-6 py-10">
+      <article class="bg-white rounded-2xl">
+        <div class="grid md:grid-cols-[1fr_2fr] gap-10">
+          <div class="relative rounded-xl overflow-hidden shadow-lg">
+            <img
+              src={courseData.imagen || 'https://via.placeholder.com/400x225'}
+              alt={`Portada del curso ${courseData.titulo}`}
+              class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="space-y-6">
+            <header>
+              <h1 class="text-4xl font-bold text-gray-900">{courseData.titulo}</h1>
+              <div class="flex flex-wrap gap-3 mt-3">
+                <span class="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
+                  {courseData.category}
+                </span>
+                <span class="px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
+                  {courseData.nivel}
+                </span>
+              </div>
+              <p class="text-lg text-gray-600 mt-4">
+                {courseData.descripcion || "Descripción no disponible"}
+              </p>
+            </header>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-center">
+                <p class="text-sm font-medium text-gray-500">Precio</p>
+                <p class="text-2xl font-bold text-gray-900">
+                  {courseData.precio?.toLocaleString('es-ES', {
+                    style: 'currency',
+                    currency: 'EUR',
+                  })}
+                </p>
+              </div>
+              <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-center">
+                <p class="text-sm font-medium text-gray-500">Instructor</p>
+                <p class="text-lg font-semibold text-gray-900">{courseData.instructor}</p>
+              </div>
+              <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-center">
+                <p class="text-sm font-medium text-gray-500">Duración</p>
+                <p class="text-2xl font-bold text-blue-800">{courseData.horas} horas</p>
+              </div>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+              <h3 class="text-xl font-semibold text-blue-800 mb-3">Temario del curso</h3>
+              <ul class="list-disc pl-5 text-gray-700">
+                {courseData.temas?.map((tema, index) => (
+                  <li key={index}>{tema}</li>
+                )) || <li>No especificado</li>}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      {/* Pasamos el id del curso y la URL del video */}
+      <VideoModal
+        client:load
+        title={courseData.titulo}
+        videoUrl={courseData.listaVid}
+        courseId={courseData.id} // Aquí pasamos el ID del curso
+      />
+    </div>
+  ) : (
+    <div class="text-center py-20">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">Curso no encontrado</h1>
+      <p class="text-lg text-gray-600">El curso solicitado no existe en nuestro catálogo.</p>
+    </div>
+  )}
+</Layout>
+

@@ -1,0 +1,208 @@
+[{
+  "informacion_plataforma": {
+    "nombre": "CursosTech ES",
+    "dominio": "www.cursostech.es",
+    "slogan": "Aprende tecnología en español",
+    "enlaces_principales": ["Inicio", "Cursos", "Precios", "Equipo", "Blog"]
+  },
+
+  "categorias_educativas": [
+    {
+      "id": 1,
+      "nombre": "Programación",
+      "cursos": [
+        {
+          "id": 101,
+          "titulo": "Python Básico",
+          "nivel": "Principiante",
+          "horas": 30,
+          "precio": 0,
+          "instructor": "Laura Gómez",
+          "temas": ["Variables", "Condicionales", "Funciones", "Listas"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 102,
+          "titulo": "Java Profesional",
+          "nivel": "Avanzado",
+          "horas": 60,
+          "precio": 89.99,
+          "instructor": "Carlos Ruiz",
+          "temas": ["POO", "Patrones de diseño", "Multihilo", "JDBC"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 103,
+          "titulo": "C# con .NET Core",
+          "nivel": "Intermedio",
+          "horas": 45,
+          "precio": 69.99,
+          "instructor": "Marta Vidal",
+          "temas": ["ASP.NET Core", "Entity Framework", "APIs REST", "MVC"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 104,
+          "titulo": "Go para Backend",
+          "nivel": "Intermedio",
+          "horas": 40,
+          "precio": 79.99,
+          "instructor": "Héctor López",
+          "temas": ["Goroutines", "Manejo de errores", "APIs REST", "Bases de datos"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 105,
+          "titulo": "Kotlin para Android",
+          "nivel": "Principiante",
+          "horas": 50,
+          "precio": 59.99,
+          "instructor": "Daniela Ramírez",
+          "temas": ["Intents", "Views", "Jetpack Compose", "MVVM"],
+          "imagen": "",
+          "video": ""
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Desarrollo Web",
+      "cursos": [
+        {
+          "id": 201,
+          "titulo": "HTML5 y CSS3",
+          "nivel": "Principiante",
+          "horas": 25,
+          "precio": 0,
+          "instructor": "Pedro Jiménez",
+          "temas": ["Semántica HTML", "Flexbox", "Grid", "Animaciones CSS"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 202,
+          "titulo": "React Avanzado",
+          "nivel": "Avanzado",
+          "horas": 50,
+          "precio": 99.99,
+          "instructor": "Ana Beltrán",
+          "temas": ["Hooks", "Context API", "Redux", "Testing"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 203,
+          "titulo": "Vue.js 3",
+          "nivel": "Intermedio",
+          "horas": 40,
+          "precio": 79.99,
+          "instructor": "David Campos",
+          "temas": ["Composition API", "Vue Router", "Vuex", "Nuxt.js"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 204,
+          "titulo": "Angular desde Cero",
+          "nivel": "Principiante",
+          "horas": 35,
+          "precio": 69.99,
+          "instructor": "Santiago Moreno",
+          "temas": ["Componentes", "Directivas", "RxJS", "Formularios Reactivos"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 205,
+          "titulo": "Desarrollo Fullstack con MERN",
+          "nivel": "Avanzado",
+          "horas": 80,
+          "precio": 119.99,
+          "instructor": "Natalia Vega",
+          "temas": ["MongoDB", "Express.js", "React", "Node.js"],
+          "imagen": "",
+          "video": ""
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Datos e IA",
+      "cursos": [
+        {
+          "id": 301,
+          "titulo": "SQL Básico",
+          "nivel": "Principiante",
+          "horas": 20,
+          "precio": 29.99,
+          "instructor": "Sofía Méndez",
+          "temas": ["Consultas SELECT", "JOINS", "Funciones", "Subconsultas"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 302,
+          "titulo": "Machine Learning",
+          "nivel": "Avanzado",
+          "horas": 80,
+          "precio": 149.99,
+          "instructor": "Roberto Vargas",
+          "temas": ["Regresión", "Clasificación", "Redes Neuronales", "TensorFlow"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 303,
+          "titulo": "Power BI",
+          "nivel": "Intermedio",
+          "horas": 35,
+          "precio": 59.99,
+          "instructor": "Elena Castro",
+          "temas": ["Modelado de datos", "DAX", "Visualización", "Dashboards"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 304,
+          "titulo": "Introducción a Big Data",
+          "nivel": "Intermedio",
+          "horas": 50,
+          "precio": 89.99,
+          "instructor": "Luis Paredes",
+          "temas": ["Hadoop", "Spark", "MapReduce", "Bases de datos NoSQL"],
+          "imagen": "",
+          "video": ""
+        },
+        {
+          "id": 305,
+          "titulo": "Inteligencia Artificial Aplicada",
+          "nivel": "Avanzado",
+          "horas": 70,
+          "precio": 159.99,
+          "instructor": "María Torres",
+          "temas": ["Redes Convolucionales", "NLP", "Reinforcement Learning", "PyTorch"],
+          "imagen": "",
+          "video": ""
+        }
+      ]
+    }
+  ],
+
+  "niveles_disponibles": [
+    "Principiante",
+    "Intermedio",
+    "Avanzado"
+  ],
+
+  "estadisticas": {
+    "total_cursos": 15,
+    "cursos_gratis": 2,
+    "cursos_premium": 13,
+    "instructores": 10
+  }
+}
+]

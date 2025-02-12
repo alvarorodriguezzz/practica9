@@ -1,0 +1,73 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CourseList from "../components/CourseList.jsx";
+import Navbar from "../components/NavBar";
+// import ReviewSlider from "../components/ReviewSlider";
+
+---
+<Layout>
+  <Navbar client:load />
+  <section class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-16 px-8 text-center">
+    <h1 class="text-4xl mb-4 font-bold">
+      Bienvenido a la Plataforma de Cursos
+    </h1>
+    <p class="text-lg">Encuentra el curso ideal para ti</p>
+
+    <div class="container mx-auto py-12 px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Tarjeta Programación -->
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+
+          <!-- Agregar color explícito al texto -->
+          <h3 class="text-2xl font-bold mb-3 text-gray-800">Programación</h3>
+          <p class="text-gray-600 mb-4">
+            Domina los fundamentos de la programación con Python, Java y C#
+          </p>
+          <button
+            onclick="window.dispatchEvent(new CustomEvent('filterCategory', { detail: 'Programación' }))"
+            class="inline-block bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Ver cursos
+          </button>
+        </div>
+
+        <!-- Tarjeta Desarrollo Web -->
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+
+          <h3 class="text-2xl font-bold mb-3 text-gray-800">Desarrollo Web</h3>
+          <p class="text-gray-600 mb-4">
+            Crea aplicaciones modernas con React, Vue.js y Node.js
+          </p>
+          <button
+            onclick="window.dispatchEvent(new CustomEvent('filterCategory', { detail: 'Desarrollo Web' }))"
+            class="inline-block bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-700 transition-colors"
+          >
+            Ver cursos
+          </button>
+        </div>
+
+        <!-- Tarjeta Datos e IA -->
+        <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+          
+          <h3 class="text-2xl font-bold mb-3 text-gray-800">Datos e IA</h3>
+          <p class="text-gray-600 mb-4">
+            Aprende SQL, Machine Learning y análisis de datos
+          </p>
+          <button
+            onclick="window.dispatchEvent(new CustomEvent('filterCategory', { detail: 'Datos e IA' }))"
+            class="inline-block bg-purple-600 text-white px-5 py-2 rounded-md hover:bg-purple-700 transition-colors"
+          >
+            Ver cursos
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Slider de Reseñas -->
+    <!-- <section class="mt-16">
+      <ReviewSlider client:load />
+    </section> -->
+
+  <CourseList client:load />
+</Layout>
