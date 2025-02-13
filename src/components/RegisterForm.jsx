@@ -9,7 +9,7 @@ export default function RegisterForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validar que las contraseñas coincidan
+    
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;

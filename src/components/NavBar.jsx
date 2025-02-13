@@ -1,19 +1,20 @@
-// src/components/Navbar.jsx
+
 import React, { useState, useEffect } from 'react';
+import logo from '../assets/logoP9.png';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
   useEffect(() => {
-    // 1. Al montar, cargar el usuario logueado desde localStorage.
+    // Al montar, cargar el usuario logueado desde localStorage.
     const user = JSON.parse(localStorage.getItem('loggedInUser'));
     if (user) {
       setLoggedInUser(user);
     }
 
-    // 2. (Opcional) Escuchar cambios en 'storage' para cuando se modifique
-    //    localStorage en otras pestañas o al cerrar sesión desde otra vista.
+    //  Escuchar cambios en 'storage' para cuando se modifique
+    //  localStorage en otras pestañas o al cerrar sesión desde otra vista.
     function handleStorageChange() {
       const updatedUser = JSON.parse(localStorage.getItem('loggedInUser'));
       setLoggedInUser(updatedUser || null);
@@ -31,7 +32,7 @@ export default function Navbar() {
     // Borrar del localStorage al usuario
     localStorage.removeItem('loggedInUser');
     setLoggedInUser(null);
-    // Redirigir a la página principal (o donde gustes)
+    
     window.location.href = '/';
   };
 
@@ -43,7 +44,7 @@ export default function Navbar() {
         <div className="flex items-center">
           <a href="/" className="flex items-center">
             <img
-              src="/src/assets/logoP9.png"
+              src={logo.src}
               alt="CursosMason Logo"
               className="h-10 w-15 mr-2"
             />
@@ -51,7 +52,7 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Botón Hamburguesa (versión móvil) */}
+        {/* boton para movil */}
         <div className="md:hidden">
           <button
             onClick={handleToggle}
@@ -75,7 +76,7 @@ export default function Navbar() {
                 />
               </svg>
             ) : (
-              // Ícono de Hamburguesa
+              //icono menu
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -102,7 +103,7 @@ export default function Navbar() {
         >
           <ul className="flex flex-col md:flex-row md:space-x-6 mt-2 md:mt-0">
             {loggedInUser ? (
-              /* Si hay usuario logueado, mostrar "Mis Cursos" y "Cerrar Sesión" */
+              /* si login mostrar cerrar y mis cursos */
               <>
                 <li>
                   <a
@@ -122,7 +123,7 @@ export default function Navbar() {
                 </li>
               </>
             ) : (
-              /* Si NO hay usuario, mostrar "Login" y "Registrarse" */
+              /* si no logged in entonces login y registrar */
               <>
                 <li>
                   <a

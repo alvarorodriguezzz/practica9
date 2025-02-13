@@ -4,7 +4,7 @@ export default function PurchasedCourses() {
   const [purchasedCourses, setPurchasedCourses] = useState([]);
 
   useEffect(() => {
-    // Leer la lista de cursos comprados desde localStorage
+    // leer cursos comprados desde localStorage
     const storedCourses = JSON.parse(localStorage.getItem('purchasedCourses')) || [];
     setPurchasedCourses(storedCourses);
   }, []);
