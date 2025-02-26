@@ -2,28 +2,55 @@
 import Layout from "../layouts/Layout.astro";
 import CourseList from "../components/CourseList.jsx";
 import Navbar from "../components/NavBar";
-// import ReviewSlider from "../components/ReviewSlider";
-
 ---
+
 <Layout>
   <Navbar client:load />
-  <section class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-16 px-8 text-center">
-    <h1 class="text-4xl mb-4 font-bold">
+  
+  <!-- Sección de bienvenida -->
+  <section
+    class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-16 px-8 text-center"
+  >
+    <!-- Título con data-* para versión en inglés -->
+    <h1
+      class="text-4xl mb-4 font-bold"
+      id="welcome-title"
+      data-title-en="Welcome to the Courses Platform"
+    >
       Bienvenido a la Plataforma de Cursos
     </h1>
-    <p class="text-lg">Encuentra el curso ideal para ti</p>
+
+    <!-- Subtítulo con data-* para versión en inglés -->
+    <p
+      class="text-lg"
+      id="welcome-subtitle"
+      data-subtitle-en="Find the ideal course for you"
+    >
+      Encuentra el curso ideal para ti
+    </p>
 
     <div class="container mx-auto py-12 px-4">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
         <!-- Tarjeta Programación -->
         <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-
-          <!-- Agregar color explícito al texto -->
-          <h3 class="text-2xl font-bold mb-3 text-gray-800">Programación</h3>
-          <p class="text-gray-600 mb-4">
+          <h3
+            class="text-2xl font-bold mb-3 text-gray-800"
+            id="programacion-title"
+            data-title-en="Programming"
+          >
+            Programación
+          </h3>
+          <p
+            class="text-gray-600 mb-4"
+            id="programacion-desc"
+            data-desc-en="Master the fundamentals of programming with Python, Java and C#"
+          >
             Domina los fundamentos de la programación con Python, Java y C#
           </p>
           <button
+            id="programacion-btn"
+            data-btn-en="View courses"
             onclick="window.dispatchEvent(new CustomEvent('filterCategory', { detail: 'Programación' }))"
             class="inline-block bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition-colors"
           >
@@ -33,12 +60,23 @@ import Navbar from "../components/NavBar";
 
         <!-- Tarjeta Desarrollo Web -->
         <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-
-          <h3 class="text-2xl font-bold mb-3 text-gray-800">Desarrollo Web</h3>
-          <p class="text-gray-600 mb-4">
+          <h3
+            class="text-2xl font-bold mb-3 text-gray-800"
+            id="desarrollo-title"
+            data-title-en="Web Development"
+          >
+            Desarrollo Web
+          </h3>
+          <p
+            class="text-gray-600 mb-4"
+            id="desarrollo-desc"
+            data-desc-en="Create modern applications with React, Vue.js and Node.js"
+          >
             Crea aplicaciones modernas con React, Vue.js y Node.js
           </p>
           <button
+            id="desarrollo-btn"
+            data-btn-en="View courses"
             onclick="window.dispatchEvent(new CustomEvent('filterCategory', { detail: 'Desarrollo Web' }))"
             class="inline-block bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-700 transition-colors"
           >
@@ -48,12 +86,23 @@ import Navbar from "../components/NavBar";
 
         <!-- Tarjeta Datos e IA -->
         <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-          
-          <h3 class="text-2xl font-bold mb-3 text-gray-800">Datos e IA</h3>
-          <p class="text-gray-600 mb-4">
+          <h3
+            class="text-2xl font-bold mb-3 text-gray-800"
+            id="datos-title"
+            data-title-en="Data and AI"
+          >
+            Datos e IA
+          </h3>
+          <p
+            class="text-gray-600 mb-4"
+            id="datos-desc"
+            data-desc-en="Learn SQL, Machine Learning and data analysis"
+          >
             Aprende SQL, Machine Learning y análisis de datos
           </p>
           <button
+            id="datos-btn"
+            data-btn-en="View courses"
             onclick="window.dispatchEvent(new CustomEvent('filterCategory', { detail: 'Datos e IA' }))"
             class="inline-block bg-purple-600 text-white px-5 py-2 rounded-md hover:bg-purple-700 transition-colors"
           >
@@ -65,4 +114,64 @@ import Navbar from "../components/NavBar";
   </section>
 
   <CourseList client:load />
+
+  <!-- Script inline para cambiar textos según idioma -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const idioma = localStorage.getItem('idioma') || 'es';
+      if (idioma === 'en') {
+        // Título y subtítulo de la sección de bienvenida
+        const welcomeTitle = document.getElementById('welcome-title');
+        if (welcomeTitle && welcomeTitle.dataset.titleEn) {
+          welcomeTitle.textContent = welcomeTitle.dataset.titleEn;
+        }
+        const welcomeSubtitle = document.getElementById('welcome-subtitle');
+        if (welcomeSubtitle && welcomeSubtitle.dataset.subtitleEn) {
+          welcomeSubtitle.textContent = welcomeSubtitle.dataset.subtitleEn;
+        }
+
+        // Programación
+        const progTitle = document.getElementById('programacion-title');
+        if (progTitle && progTitle.dataset.titleEn) {
+          progTitle.textContent = progTitle.dataset.titleEn;
+        }
+        const progDesc = document.getElementById('programacion-desc');
+        if (progDesc && progDesc.dataset.descEn) {
+          progDesc.textContent = progDesc.dataset.descEn;
+        }
+        const progBtn = document.getElementById('programacion-btn');
+        if (progBtn && progBtn.dataset.btnEn) {
+          progBtn.textContent = progBtn.dataset.btnEn;
+        }
+
+        // Desarrollo Web
+        const desTitle = document.getElementById('desarrollo-title');
+        if (desTitle && desTitle.dataset.titleEn) {
+          desTitle.textContent = desTitle.dataset.titleEn;
+        }
+        const desDesc = document.getElementById('desarrollo-desc');
+        if (desDesc && desDesc.dataset.descEn) {
+          desDesc.textContent = desDesc.dataset.descEn;
+        }
+        const desBtn = document.getElementById('desarrollo-btn');
+        if (desBtn && desBtn.dataset.btnEn) {
+          desBtn.textContent = desBtn.dataset.btnEn;
+        }
+
+        // Datos e IA
+        const datosTitle = document.getElementById('datos-title');
+        if (datosTitle && datosTitle.dataset.titleEn) {
+          datosTitle.textContent = datosTitle.dataset.titleEn;
+        }
+        const datosDesc = document.getElementById('datos-desc');
+        if (datosDesc && datosDesc.dataset.descEn) {
+          datosDesc.textContent = datosDesc.dataset.descEn;
+        }
+        const datosBtn = document.getElementById('datos-btn');
+        if (datosBtn && datosBtn.dataset.btnEn) {
+          datosBtn.textContent = datosBtn.dataset.btnEn;
+        }
+      }
+    });
+  </script>
 </Layout>

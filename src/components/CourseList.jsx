@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
-import CartModal from './CartModal'; // Cambiamos el nombre del componente para evitar confusión
+import CartModal from './CartModal';
+
+// Función para convertir el precio según la moneda seleccionada
+function convertirPrecio(precio, moneda) {
+  const tasasCambio = { EUR: 1, USD: 1.05, GBP: 0.83 }; 
+  return (precio * tasasCambio[moneda]).toFixed(2);
+}
 
 function CourseList() {
   const [courses, setCourses] = useState([]);
@@ -9,8 +15,22 @@ function CourseList() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la apertura del carrito
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const coursesRef = useRef(null);
+
+  // Estado para idioma y moneda
+  const [idioma, setIdioma] = useState('es');
+  const [moneda, setMoneda] = useState('EUR');
+
+  // Obtener idioma y moneda al cargar el componente (solo en cliente)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedIdioma = localStorage.getItem('idioma') || 'es';
+      const storedMoneda = localStorage.getItem('moneda') || 'EUR';
+      setIdioma(storedIdioma);
+      setMoneda(storedMoneda);
+    }
+  }, []);
 
   useEffect(() => {
     const handleFilter = (event) => {
@@ -52,7 +72,14 @@ function CourseList() {
     return () => unsubscribe();
   }, []);
 
-  const filteredCourses = courses.filter((course) => {
+  const filteredCourses = courses.map((course) => ({
+    ...course,
+    titulo: idioma === "en" ? course.tituloEN || course.titulo : course.titulo,
+    descripcion: idioma === "en" ? course.descripcionEN || course.descripcion : course.descripcion,
+    priceSymbol: moneda === "EUR" ? `€${convertirPrecio(course.price, moneda)}` :
+                 moneda === "USD" ? `$${convertirPrecio(course.price, moneda)}` :
+                 `£${convertirPrecio(course.price, moneda)}`,
+  })).filter((course) => {
     const matchesSearch =
       course.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (course.descripcion && course.descripcion.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -95,7 +122,7 @@ function CourseList() {
       <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
         <input
           type="text"
-          placeholder="🔍 Buscar cursos por título o descripción..."
+          placeholder={idioma === "es" ? "🔍 Buscar cursos por título o descripción..." : "🔍 Search courses by title or description..."}
           className="w-full md:w-96 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -105,13 +132,15 @@ function CourseList() {
             onClick={() => setSelectedCategory('')}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
           >
-            Limpiar filtros
+            {idioma === "es" ? "Limpiar filtros" : "Clear filters"}
           </button>
         )}
       </div>
 
       {selectedCategory && (
-        <h2 className="text-2xl font-bold mb-6">Mostrando cursos de: {selectedCategory}</h2>
+        <h2 className="text-2xl font-bold mb-6">
+          {idioma === "es" ? "Mostrando cursos de:" : "Showing courses in:"} {selectedCategory}
+        </h2>
       )}
 
       {/* Lista de cursos */}
@@ -148,9 +177,7 @@ function CourseList() {
                 </div>
                 <p className="text-gray-600 mb-4 line-clamp-3">{course.descripcion}</p>
                 <div className="flex justify-between items-center">
-                  <p className="text-2xl font-bold text-blue-600">
-                    {course.price > 0 ? `$${course.price.toFixed(2)}` : 'GRATIS'}
-                  </p>
+                  <p className="text-2xl font-bold text-blue-600">{course.priceSymbol}</p>
                   <span className="text-sm text-gray-500">{course.category}</span>
                 </div>
               </div>
@@ -160,18 +187,12 @@ function CourseList() {
                 onClick={() => addToCart(course)}
                 className="w-full bg-blue-400 text-white py-2 rounded hover:bg-green-700 transition"
               >
-                Agregar al carrito
+                {idioma === "es" ? "Agregar al carrito" : "Add to cart"}
               </button>
             </div>
           </div>
         ))}
       </div>
-
-      {filteredCourses.length === 0 && !loading && (
-        <div className="text-center py-12 text-gray-500">
-          No se encontraron cursos con ese criterio de búsqueda
-        </div>
-      )}
     </div>
   );
 }

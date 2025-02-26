@@ -5,20 +5,22 @@ import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/NavBar";
 import VideoModal from "../../components/VideoModal"; 
 
-// Definición de interfaces en TypeScript para mejor estructura
 interface Course {
   id: string;
   titulo: string;
+  tituloEN?: string;        // <-- Campo opcional para la traducción
   nivel: string;
+  nivelEN?: string;         // <-- Campo opcional para la traducción
   horas: number;
   precio: number;
   instructor: string;
   temas: string[];
   imagen: string;
   descripcion?: string;
+  descripcionEN?: string;   // <-- Campo opcional para la traducción
   category?: string;
   likes?: number;
-  listaVid?: string; // URL del video o playlist
+  listaVid?: string;        // URL del video o playlist
 }
 
 // Generación de rutas estáticas
@@ -87,42 +89,71 @@ const loggedIn = typeof window !== "undefined" && localStorage.getItem("loggedIn
 
           <div class="space-y-6">
             <header>
-              <h1 class="text-4xl font-bold text-gray-900">{courseData.titulo}</h1>
+              <!-- Título con data attribute para la versión en inglés -->
+              <h1
+                id="course-title"
+                data-titulo-en={courseData.tituloEN}
+                class="text-4xl font-bold text-gray-900"
+              >
+                {courseData.titulo}
+              </h1>
+
               <div class="flex flex-wrap gap-3 mt-3">
                 <span class="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
                   {courseData.category}
                 </span>
-                <span class="px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
+
+                <!-- Nivel con data attribute para la versión en inglés (nivelEN) -->
+                <span
+                  id="course-level"
+                  data-nivel-en={courseData.nivelEN}
+                  class="px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium"
+                >
                   {courseData.nivel}
                 </span>
               </div>
-              <p class="text-lg text-gray-600 mt-4">
+
+              <!-- Descripción con data attribute para la versión en inglés -->
+              <p
+                id="course-description"
+                data-descripcion-en={courseData.descripcionEN}
+                class="text-lg text-gray-600 mt-4"
+              >
                 {courseData.descripcion || "Descripción no disponible"}
               </p>
             </header>
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-center">
-                <p class="text-sm font-medium text-gray-500">Precio</p>
-                <p class="text-2xl font-bold text-gray-900">
+                <p class="text-sm font-medium text-gray-500" id="label-precio">Precio</p>
+                <!-- Se guarda el precio original en un data attribute para su conversión -->
+                <p
+                  class="text-2xl font-bold text-gray-900"
+                  id="course-price"
+                  data-price={courseData.precio}
+                >
                   {courseData.precio?.toLocaleString('es-ES', {
                     style: 'currency',
                     currency: 'EUR',
                   })}
                 </p>
               </div>
+
               <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-center">
-                <p class="text-sm font-medium text-gray-500">Instructor</p>
+                <p class="text-sm font-medium text-gray-500" id="label-instructor">Instructor</p>
                 <p class="text-lg font-semibold text-gray-900">{courseData.instructor}</p>
               </div>
+
               <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-center">
-                <p class="text-sm font-medium text-gray-500">Duración</p>
-                <p class="text-2xl font-bold text-blue-800">{courseData.horas} horas</p>
+                <p class="text-sm font-medium text-gray-500" id="label-duracion">Duración</p>
+                <p class="text-2xl font-bold text-blue-800">
+                  {courseData.horas} {courseData.horas === 1 ? 'hora' : 'horas'}
+                </p>
               </div>
             </div>
 
             <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
-              <h3 class="text-xl font-semibold text-blue-800 mb-3">Temario del curso</h3>
+              <h3 class="text-xl font-semibold text-blue-800 mb-3" id="label-temario">Temario del curso</h3>
               <ul class="list-disc pl-5 text-gray-700">
                 {courseData.temas?.map((tema, index) => (
                   <li key={index}>{tema}</li>
@@ -133,19 +164,80 @@ const loggedIn = typeof window !== "undefined" && localStorage.getItem("loggedIn
         </div>
       </article>
 
-      {/* Pasamos el id del curso y la URL del video */}
       <VideoModal
         client:load
         title={courseData.titulo}
         videoUrl={courseData.listaVid}
-        courseId={courseData.id} // Aquí pasamos el ID del curso
+        courseId={courseData.id} 
       />
     </div>
   ) : (
     <div class="text-center py-20">
-      <h1 class="text-3xl font-bold text-gray-900 mb-4">Curso no encontrado</h1>
-      <p class="text-lg text-gray-600">El curso solicitado no existe en nuestro catálogo.</p>
+      <h1 id="not-found-title" class="text-3xl font-bold text-gray-900 mb-4">Curso no encontrado</h1>
+      <p id="not-found-desc" class="text-lg text-gray-600">El curso solicitado no existe en nuestro catálogo.</p>
     </div>
   )}
-</Layout>
 
+  <!-- Script para actualizar textos y precio según idioma y moneda -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const idioma = localStorage.getItem('idioma') || 'es';
+      const moneda = localStorage.getItem('moneda') || 'EUR';
+
+      // Función para "convertir" el precio según la moneda seleccionada
+      function convertirPrecio(precio, moneda) {
+        const tasasCambio = { EUR: 1, USD: 1.05, GBP: 0.83 };
+        return (precio * tasasCambio[moneda]).toFixed(2);
+      }
+
+      // Si el idioma es "en", cambiamos ciertos textos
+      if (idioma === 'en') {
+        const titleEl = document.getElementById('course-title');
+        if (titleEl && titleEl.dataset.tituloEn) {
+          titleEl.textContent = titleEl.dataset.tituloEn;
+        }
+
+        const levelEl = document.getElementById('course-level');
+        if (levelEl && levelEl.dataset.nivelEn) {
+          levelEl.textContent = levelEl.dataset.nivelEn;
+        }
+
+        const descEl = document.getElementById('course-description');
+        if (descEl && descEl.dataset.descripcionEn) {
+          descEl.textContent = descEl.dataset.descripcionEn;
+        }
+
+        const precioLabel = document.getElementById('label-precio');
+        if (precioLabel) precioLabel.textContent = 'Price';
+
+        const instructorLabel = document.getElementById('label-instructor');
+        if (instructorLabel) instructorLabel.textContent = 'Instructor';
+
+        const duracionLabel = document.getElementById('label-duracion');
+        if (duracionLabel) duracionLabel.textContent = 'Duration';
+
+        const temarioLabel = document.getElementById('label-temario');
+        if (temarioLabel) temarioLabel.textContent = 'Course Outline';
+
+        const notFoundTitle = document.getElementById('not-found-title');
+        if (notFoundTitle) notFoundTitle.textContent = 'Course not found';
+
+        const notFoundDesc = document.getElementById('not-found-desc');
+        if (notFoundDesc) notFoundDesc.textContent = 'The requested course does not exist in our catalog.';
+      }
+
+      // Actualizar el precio mostrado según la moneda
+      const priceEl = document.getElementById('course-price');
+      if (priceEl) {
+        const originalPrice = parseFloat(priceEl.dataset.price) || 0;
+        const convertedPrice = convertirPrecio(originalPrice, moneda);
+        let symbol = '';
+        if (moneda === 'EUR') symbol = '€';
+        else if (moneda === 'USD') symbol = '$';
+        else if (moneda === 'GBP') symbol = '£';
+
+        priceEl.textContent = symbol + convertedPrice;
+      }
+    });
+  </script>
+</Layout>
