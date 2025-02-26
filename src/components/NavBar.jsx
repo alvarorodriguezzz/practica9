@@ -4,8 +4,8 @@ import logo from '../assets/logoP9.png';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [idioma, setIdioma] = useState('es'); // Por defecto español
-  const [moneda, setMoneda] = useState('EUR'); // Por defecto EUR
+  const [idioma, setIdioma] = useState('es');
+  const [moneda, setMoneda] = useState('EUR');
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -29,9 +29,7 @@ export default function Navbar() {
     }
   }, []);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
+  const handleToggle = () => setIsOpen(!isOpen);
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
@@ -60,23 +58,23 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-4 py-2 shadow-sm">
+    <nav className="bg-white border-b border-gray-200 px-6 py-3 shadow-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        
+
         {/* Logo */}
         <div className="flex items-center">
           <a href="/" className="flex items-center">
-            <img src={logo.src} alt="CursosMason Logo" className="h-10 w-15 mr-2" />
-            <span className="text-xl font-bold text-gray-800">CursosMason</span>
+            <img src={logo.src} alt="CursosMason Logo" className="h-10 w-auto mr-3" />
+            <span className="text-2xl font-bold text-gray-800">CursosMason</span>
           </a>
         </div>
 
-        {/* Selectores de idioma y moneda */}
-        <div className="hidden md:flex items-center space-x-4">
+        {/* Selectores de idioma y moneda (Centrados) */}
+        <div className="flex items-center space-x-6">
           <select 
             value={idioma} 
             onChange={handleIdiomaChange} 
-            className="border px-2 py-1 rounded cursor-pointer"
+            className="border px-3 py-2 rounded-md text-gray-700 font-medium shadow-sm hover:bg-gray-100 transition"
           >
             <option value="es">🇪🇸 Español</option>
             <option value="en">🇬🇧 English</option>
@@ -85,7 +83,7 @@ export default function Navbar() {
           <select 
             value={moneda} 
             onChange={handleMonedaChange} 
-            className="border px-2 py-1 rounded cursor-pointer"
+            className="border px-3 py-2 rounded-md text-gray-700 font-medium shadow-sm hover:bg-gray-100 transition"
           >
             <option value="EUR">€ EUR</option>
             <option value="USD">$ USD</option>
@@ -93,33 +91,56 @@ export default function Navbar() {
           </select>
         </div>
 
-        {/* Botón para móvil */}
-        <div className="md:hidden">
-          <button onClick={handleToggle} className="text-gray-700 focus:outline-none" aria-label="Toggle menu">
-            {isOpen ? (
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
+        {/* Menú de usuario */}
+        <div className="hidden md:flex items-center space-x-4">
+          {loggedInUser ? (
+            <>
+              <a href="/misCursos" className="text-blue-600 font-medium hover:text-blue-800 transition">
+                {idioma === 'es' ? 'Mis Cursos' : 'My Courses'}
+              </a>
+              <button 
+                onClick={handleLogout} 
+                className="text-red-600 border border-red-600 px-4 py-2 rounded-md font-medium hover:bg-red-50 transition"
+              >
+                {idioma === 'es' ? 'Cerrar Sesión' : 'Logout'}
+              </button>
+            </>
+          ) : (
+            <>
+              <a href="/login" className="text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition">
+                Login
+              </a>
+              <a href="/register" className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition">
+                {idioma === 'es' ? 'Registrarse' : 'Sign Up'}
+              </a>
+            </>
+          )}
         </div>
 
-        {/* Enlaces de navegación */}
-        <div className={`flex-1 justify-end md:flex md:items-center md:static ${isOpen ? 'block' : 'hidden'}`}>
-          <ul className="flex flex-col md:flex-row md:space-x-6 mt-2 md:mt-0">
+        {/* Botón para menú en móvil */}
+        <div className="md:hidden">
+          <button onClick={handleToggle} className="text-gray-700 focus:outline-none" aria-label="Toggle menu">
+            {isOpen ? '✖' : '☰'}
+          </button>
+        </div>
+      </div>
+
+      {/* Menú móvil */}
+      {isOpen && (
+        <div className="md:hidden bg-gray-100 rounded-md mt-2 p-4 shadow-lg">
+          <ul className="space-y-4 text-center">
             {loggedInUser ? (
               <>
                 <li>
-                  <a href="/misCursos" className="text-blue-600 hover:text-blue-800 px-4 py-1">
+                  <a href="/misCursos" className="text-blue-600 font-medium block">
                     {idioma === 'es' ? 'Mis Cursos' : 'My Courses'}
                   </a>
                 </li>
                 <li>
-                  <button onClick={handleLogout} className="text-red-600 border border-red-600 px-4 py-1 rounded hover:bg-red-50">
+                  <button 
+                    onClick={handleLogout} 
+                    className="text-red-600 border border-red-600 px-4 py-2 rounded-md font-medium hover:bg-red-50 transition w-full"
+                  >
                     {idioma === 'es' ? 'Cerrar Sesión' : 'Logout'}
                   </button>
                 </li>
@@ -127,12 +148,12 @@ export default function Navbar() {
             ) : (
               <>
                 <li>
-                  <a href="/login" className="text-gray-700 px-4 py-1 border border-gray-300 rounded hover:bg-gray-100">
+                  <a href="/login" className="text-gray-700 font-medium block">
                     Login
                   </a>
                 </li>
                 <li>
-                  <a href="/register" className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
+                  <a href="/register" className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition block">
                     {idioma === 'es' ? 'Registrarse' : 'Sign Up'}
                   </a>
                 </li>
@@ -140,7 +161,7 @@ export default function Navbar() {
             )}
           </ul>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
